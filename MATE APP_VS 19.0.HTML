@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matemática Viva | Borja 2026</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root { --primary: #0f172a; --accent: #2563eb; --bg: #f8fafc; }
+        body { background: var(--bg); font-family: 'Inter', sans-serif; color: #1e293b; line-height: 1.6; }
+        .app-header { background: var(--primary); color: white; padding: 2rem 0; border-bottom: 5px solid var(--accent); }
+        .card-custom { border: none; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); background: white; margin-bottom: 2rem; }
+        .problem-box { padding: 2.5rem; border-left: 10px solid var(--accent); min-height: 650px; }
+        .option-item { border: 2px solid #e2e8f0; padding: 1rem; border-radius: 12px; margin-bottom: 0.8rem; cursor: pointer; transition: 0.3s; width: 100%; text-align: left; background: #fff; font-weight: 500; }
+        .option-item:hover { border-color: var(--accent); background: #f0f7ff; transform: translateX(5px); }
+        .btn-action { background: var(--accent); color: white; padding: 1rem; border-radius: 12px; font-weight: 700; width: 100%; border: none; letter-spacing: 1px; }
+        .prompt-visual-box { background: #fffbeb; border: 1px dashed #ca8a04; padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem; }
+        .solution-panel { display: none; background: #f1f5f9; padding: 2rem; border-radius: 12px; margin-top: 1.5rem; border: 1px solid #cbd5e1; border-left: 5px solid #10b981; }
+        footer { padding: 3rem; background: var(--primary); color: #94a3b8; text-align: center; }
+        .math-sym { font-family: 'Cambria Math', 'serif'; font-style: italic; color: #1e293b; font-weight: bold; }
+        .text-justify { text-align: justify; }
+    </style>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="container text-center">
+        <h1 class="fw-bold">MATEMÁTICA VIVA</h1>
+        <p class="lead opacity-75">Recurso de Contextualización Situada - Borja (2026)</p>
+    </div>
+</header>
+
+<div class="container mt-5">
+    <div class="card card-custom p-4 border-start border-primary border-4">
+        <h5 class="fw-bold text-primary mb-3">Marco Metodológico</h5>
+        <p class="text-justify mb-0">
+            Este software operacionaliza la propuesta de <strong>Borja (2026)</strong>. Los 60 desafíos están diseñados para que el estudiante de Educación Media en El Salvador aplique el currículo de <em>ESMATE</em> a situaciones de economía real, ingeniería nacional y fenómenos sociales, eliminando la brecha entre teoría y práctica.
+        </p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card card-custom p-4 sticky-top" style="top: 20px;">
+                <label class="fw-bold mb-3">Unidad Curricular (1.er Año):</label>
+                <select id="areaSelect" class="form-select form-select-lg mb-4 shadow-sm">
+                    <option value="reales">Unidad 1: Números Reales</option>
+                    <option value="algebra">Unidad 2: Álgebra</option>
+                    <option value="funciones">Unidad 4: Funciones Reales</option>
+                    <option value="trigonometria">Unidad 6: Trigonometría</option>
+                    <option value="geometria">Unidad 7: Geometría Analítica</option>
+                    <option value="estadistica">Unidad 8: Estadística</option>
+                </select>
+                <button onclick="generarProblema()" class="btn btn-action shadow mb-4">
+                    <i class="bi bi- lightning-charge-fill me-2"></i>GENERAR DESAFÍO
+                </button>
+                <div class="alert alert-info py-2 small shadow-sm">
+                    <i class="bi bi-info-circle me-2"></i>El sistema rota entre 60 problemas técnicos contextualizados.
+                </div>
+                <hr>
+                <h6 class="fw-bold mt-3 mb-3">Buzón de Mejora Curricular</h6>
+                <div class="p-2 bg-light rounded border">
+                    <textarea id="propuesta" class="form-control mb-2" rows="3" placeholder="Sugerir nueva contextualización..."></textarea>
+                    <button class="btn btn-outline-primary btn-sm w-100" onclick="alert('Propuesta enviada para revisión por el autor (Borja, 2026)')">Enviar a Revisión</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div id="mainDisplay" class="card card-custom problem-box">
+                <div id="vacio" class="text-center py-5">
+                    <i class="bi bi-book-half display-1 text-light"></i>
+                    <h4 class="mt-4 text-secondary">Repositorio de Situaciones de Aprendizaje</h4>
+                    <p class="text-muted">Desarrollado para la mejora del aprendizaje significativo.</p>
+                </div>
+
+                <div id="contenido" style="display:none;">
+                    <div class="d-flex justify-content-between mb-4">
+                        <span id="labelArea" class="badge bg-dark px-3 py-2"></span>
+                        <small class="text-primary fw-bold">PROYECTO BORJA 2026</small>
+                    </div>
+                    <h3 id="p_titulo" class="fw-bold mb-4 text-primary"></h3>
+                    <div id="p_enunciado" class="fs-5 text-secondary mb-5 text-justify"></div>
+                    <div id="p_opciones" class="mb-4"></div>
+
+                    <div class="prompt-visual-box shadow-sm">
+                        <h6 class="fw-bold"><i class="bi bi-robot me-2"></i>Prompt para Imagen de Apoyo (IA)</h6>
+                        <p id="p_prompt_img" class="small text-muted mb-2 font-monospace italic"></p>
+                        <button class="btn btn-sm btn-dark px-3" onclick="copiarPromptImg()">Copiar Instrucción Visual</button>
+                    </div>
+
+                    <div class="mt-5 pt-4 border-top">
+                        <button class="btn btn-outline-primary w-100 fw-bold" onclick="toggleSolucion()">VER ANÁLISIS TÉCNICO Y SOLUCIÓN</button>
+                        <div id="solucion" class="solution-panel shadow-sm">
+                            <h6 class="fw-bold text-success mb-3"><i class="bi bi-check-circle me-2"></i>Resolución Metodológica:</h6>
+                            <p id="p_solucion" class="mb-0 text-justify"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <p class="mb-1 fw-bold">PROYECTO MATEMÁTICA VIVA © 2026</p>
+        <p class="small mb-0">Ensayo de Licenciatura en Educación | Gerson Vladimir Borja Hernández</p>
+    </div>
+</footer>
+
+<script>
+const db = {
+    reales: [
+        {t: "Canasta Básica y Salario", e: "En el año 2026, el costo de la canasta básica urbana aumentó de $245.50 a $262.15. Si un empleado del sector comercio recibe un salario mínimo neto de $327.59, ¿qué porcentaje de su ingreso representa el incremento absoluto del costo de vida? Utilice aproximación a dos decimales.", o: ["5.08%", "6.20%", "4.85%", "10.20%"], s: "Incremento = $262.15 - $245.50 = $16.65. Porcentaje = ($16.65 / $327.59) × 100 ≈ 5.08%. El estudiante analiza la pérdida de poder adquisitivo usando números reales.", pi: "Photography of a Salvadoran street market, price tags on vegetables, focus on dollar bills, 4k."},
+        {t: "Seguridad Vial: Los Chorros", e: "La policía utiliza la fórmula v = √(250 × f × d) para peritajes. En una colisión, la huella de frenado 'd' fue de 60m y el coeficiente de fricción 'f' de 0.8. Calcule la velocidad 'v' en km/h e identifique si superaba el límite de 90 km/h.", o: ["109.54 km/h (Superaba)", "85.20 km/h (No superaba)", "120.00 km/h (Superaba)", "90.00 km/h (Límite)"], s: "v = √(250 × 0.8 × 60) = √12000 ≈ 109.54 km/h. Aplicación de radicales en el marco de la seguridad ciudadana.", pi: "Cinematic shot of Los Chorros highway, wet asphalt, tire marks, flashing police lights in distance."},
+        {t: "Inversión Digital (BTC)", e: "Un salvadoreño compra 0.005 BTC cuando el precio es de $68,000. Si el precio sube un 12.5% y luego baja un 5.4%, ¿cuál es el valor final de su inversión expresado en números reales?", o: ["$361.83", "$382.50", "$340.00", "$315.20"], s: "Inversión inicial: 0.005 × 68000 = $340. Subida: 340 × 1.125 = $382.5. Bajada: 382.5 × 0.946 ≈ $361.83. Análisis de volatilidad financiera.", pi: "Close-up of a smartphone with a Bitcoin graph, background of San Salvador volcano."},
+        {t: "Densidad de Sonsonate", e: "El departamento tiene 512,000 habitantes en 1,225 km². Si el 15% de la población migra a zonas urbanas, ¿cuál es la nueva densidad rural si el área rural es de 900 km²?", o: ["483.55 hab/km²", "417.96 hab/km²", "568.80 hab/km²", "390.00 hab/km²"], s: "Población rural = 512000 × 0.85 = 435200. Densidad = 435200 / 900 ≈ 483.55 hab/km². Demografía crítica.", pi: "Aerial landscape of Sonsonate rural area, green fields, small houses scattered."},
+        {t: "Exportación de Café", e: "Se exportan 4,500 sacos. Cada saco pesa 46kg ± 0.5kg (margen de error). Calcule el peso total máximo que puede reportar la aduana en toneladas métricas.", o: ["209.25 t", "207.00 t", "211.50 t", "205.00 t"], s: "Peso máx saco = 46.5kg. Total = 4500 × 46.5 = 209,250kg = 209.25 t. Uso de desigualdades y errores en el comercio.", pi: "Coffee sacks in a port warehouse, high quality coffee beans, industrial scales."},
+        {t: "Construcción: Mezcla de Cemento", e: "Una constructora usa la razón 1:2:3 (Cemento, Arena, Grava). Para una obra de 450 m³ de mezcla, ¿cuántos m³ de arena se requieren?", o: ["150 m³", "75 m³", "225 m³", "100 m³"], s: "Total partes = 1+2+3=6. Arena = (2/6) × 450 = 150 m³. Razones y proporciones en ingeniería civil.", pi: "Construction site in San Salvador, cement mixer, blueprints, workers in safety gear."},
+        {t: "Remesas Familiares", e: "En Izalco, una familia recibe $200 mensuales. Si el IVA (13%) se aplica al 60% de sus compras, ¿cuántos dólares reales pagan en impuestos indirectos al mes?", o: ["$15.60", "$26.00", "$12.00", "$18.40"], s: "Gasto imponible = 200 × 0.60 = $120. IVA = 120 × 0.13 = $15.60. Análisis tributario doméstico.", pi: "Salvadoran family in a local store, paying with dollars, focus on the receipt."},
+        {t: "Temperatura El Pital", e: "La temperatura baja 1.2°C por cada 200m de altura. Si en la base (800 msnm) hay 28°C, ¿cuál es la temperatura real en la cima (2730 msnm)?", o: ["16.42°C", "11.58°C", "20.10°C", "14.00°C"], s: "Diferencia altura = 1930m. Cambios = 1930 / 200 = 9.65. Descenso = 9.65 × 1.2 = 11.58. T = 28 - 11.58 = 16.42°C.", pi: "Mist at Cerro El Pital, pine trees, cold mountain atmosphere, thermometer icon."},
+        {t: "Diámetro de Tubería ANDA", e: "Una tubería principal tiene un radio de √18 cm. Por corrosión, el radio interno se reduce en √2 cm. Calcule el nuevo radio expresado en forma radical simplificada.", o: ["2√2 cm", "√16 cm", "√14 cm", "4√2 cm"], s: "√18 = 3√2. Nuevo radio = 3√2 - √2 = 2√2 cm. Operaciones con radicales en servicios públicos.", pi: "Technical view of a large water pipe, cross section, water flowing, blueprints."},
+        {t: "Energía Eléctrica", e: "El cargo fijo es de $3.50. Si el consumo de 180 kWh costó $32.30, ¿cuál es el precio real por kWh incluyendo decimales?", o: ["$0.16", "$0.18", "$0.14", "$0.20"], s: "Costo variable = 32.30 - 3.50 = 28.80. Precio = 28.80 / 180 = $0.16. Economía del hogar.", pi: "Digital electricity meter on a house wall, glowing display, residential street."}
+    ],
+    algebra: [
+        {t: "Utilidad: Pupusería Local", e: "Los costos fijos mensuales son C_f = $180. Producir cada pupusa cuesta $0.30 y se vende a $0.80. Plantee la ecuación de utilidad U(x) y halle el punto de equilibrio.", o: ["x = 360 pupusas", "x = 400 pupusas", "x = 300 pupusas", "x = 500 pupusas"], s: "U(x) = 0.80x - (0.30x + 180) = 0.50x - 180. Equilibrio: 0.50x = 180 -> x = 360. Gestión de microemprendimientos.", pi: "Salvadoran pupusería, hot griddle, 'curtido' and 'salsa', vibrant local colors."},
+        {t: "Área de Parque Municipal", e: "Un parque rectangular en Santa Ana tiene un largo que excede en 10m al ancho. Si el área es de 1200 m², determine las dimensiones usando factorización.", o: ["30m x 40m", "20m x 60m", "35m x 45m", "25m x 55m"], s: "x(x+10) = 1200 -> x² + 10x - 1200 = 0 -> (x+40)(x-30) = 0. Ancho = 30m, Largo = 40m.", pi: "Aerial view of a rectangular city park, trees, benches, blueprints lines."},
+        {t: "Producción Textil", e: "Una fábrica de camisas en el Plan de la Laguna modela su costo como C(x) = x² - 40x + 500. ¿Para qué nivel de producción el costo es mínimo? (Use el vértice del trinomio).", o: ["20 unidades", "40 unidades", "10 unidades", "25 unidades"], s: "x = -b / 2a = 40 / 2 = 20. Optimización de procesos industriales.", pi: "Textile factory floor, sewing machines, stacks of shirts, modern industrial style."},
+        {t: "Inversión Agrícola", e: "Se desea cercar un terreno de 500m de perímetro con malla. El largo es 'L' y el ancho es 'W'. Si L = 2W + 10, determine el valor de W mediante un sistema de ecuaciones.", o: ["80m", "100m", "120m", "70m"], s: "2(2W+10 + W) = 500 -> 6W + 20 = 500 -> 6W = 480 -> W = 80m. Diseño de granjas.", pi: "Farmers measuring a field, wooden stakes, roll of wire mesh, sunny field."},
+        {t: "Trayectoria de Balón", e: "En el Estadio Cuscatlán, un balón sigue h(t) = -5t² + 20t. ¿En qué segundo el balón impacta el suelo? (h=0).", o: ["4 s", "2 s", "5 s", "3 s"], s: "-5t(t - 4) = 0 -> t = 4 segundos. Física y álgebra en el deporte.", pi: "Night shot of Cuscatlán Stadium, soccer ball in the air with a parabolic glowing line."},
+        {t: "Subsidio al Gas", e: "El precio sin subsidio es 'P'. Con subsidio es P - 8. Si una familia compra 3 tambos y paga $21, ¿cuál es el precio 'P' original?", o: ["$15.00", "$12.00", "$18.00", "$20.00"], s: "3(P - 8) = 21 -> P - 8 = 7 -> P = $15. Álgebra y políticas sociales.", pi: "Gas cylinder truck in a neighborhood, blue tanks, delivery man."},
+        {t: "Factorización: Estructura Metálica", e: "Un refuerzo tiene un área dada por 4x² - 25. Factorice para que el soldador identifique las dimensiones de los cortes.", o: ["(2x - 5)(2x + 5)", "(2x - 5)²", "(4x - 5)(x + 5)", "(2x + 5)²"], s: "Diferencia de cuadrados perfectos. Aplicación en arquitectura.", pi: "Welder working on steel beams, sparks flying, blueprints with algebraic formulas."},
+        {t: "Telecomunicaciones: Plan de Datos", e: "Plan A: $10 + $2 por GB. Plan B: $25 fijo. ¿A partir de cuántos GB es más barato el Plan B? Plantee la inecuación.", o: ["7.5 GB", "10 GB", "5 GB", "8 GB"], s: "10 + 2x > 25 -> 2x > 15 -> x > 7.5. Toma de decisiones de consumo.", pi: "Smartphone screen with data usage alert, modern tech aesthetic."},
+        {t: "Diferencia de Edades (Censo)", e: "Un padre tiene el triple de la edad de su hijo. En 10 años, la suma de sus edades será 80. Halle la edad actual del hijo.", o: ["15 años", "20 años", "10 años", "12 años"], s: "(3x+10) + (x+10) = 80 -> 4x + 20 = 80 -> 4x = 60 -> x = 15. Demografía familiar.", pi: "A father and son walking in a park, sunset, casual photography."},
+        {t: "Mezcla Química: Purificación", e: "Se tienen x litros de alcohol al 70%. Al agregar 2 litros de agua (0%), queda al 50%. Halle 'x' mediante una ecuación de mezclas.", o: ["5 litros", "3 litros", "4 litros", "6 litros"], s: "0.70x = 0.50(x + 2) -> 0.7x = 0.5x + 1 -> 0.2x = 1 -> x = 5. Procesos de laboratorio.", pi: "Laboratory glass flask, clear liquid, digital scale, scientist hands."}
+    ],
+    funciones: [
+        {t: "Modelado de Factura ANDA", e: "La función de costo es f(x) = 0.25x + 2.29. Si este mes la factura fue de $9.79, ¿cuántos metros cúbicos (x) consumió el hogar?", o: ["30 m³", "25 m³", "40 m³", "35 m³"], s: "9.79 = 0.25x + 2.29 -> 7.50 = 0.25x -> x = 30. Análisis de servicios públicos.", pi: "Water meter being read by a worker, residential area, clipboard."},
+        {t: "Depreciación de Flota de Buses", e: "Un bus de la ruta 205 cuesta $80,000 y se deprecia linealmente $5,000 por año. ¿Cuál es el valor del bus tras 6 años de uso?", o: ["$50,000", "$60,000", "$45,000", "$55,000"], s: "V(t) = 80000 - 5000(6) = 80000 - 30000 = $50,000. Contabilidad de transporte.", pi: "Yellow bus parked in a terminal, sunset, blurred background of San Salvador city."},
+        {t: "Crecimiento de Bacterias (Lácteos)", e: "En una quesería de Metapán, una bacteria crece según f(t) = 100 × 2^t (t en horas). ¿Cuántas bacterias habrá tras 5 horas si no se refrigera?", o: ["3,200", "1,600", "6,400", "5,000"], s: "f(5) = 100 × 2⁵ = 100 × 32 = 3,200. Seguridad alimentaria.", pi: "Artisan cheese factory, milk vats, laboratory petri dish overlay."},
+        {t: "Altura de Cohete Experimental", e: "Un grupo de la UES lanza un cohete: h(t) = -4.9t² + 30t. Halle la altura a los 2 segundos de vuelo.", o: ["40.4 m", "50.0 m", "35.2 m", "45.0 m"], s: "h(2) = -4.9(4) + 30(2) = -19.6 + 60 = 40.4 metros. Ingeniería aeroespacial.", pi: "Rocket launch in a rural field, smoke trail, students with tablets."},
+        {t: "Producción de Calzado", e: "C(x) = 15x + 400. Si el costo total fue $1,300, ¿cuántos pares de zapatos se fabricaron?", o: ["60 pares", "50 pares", "70 pares", "55 pares"], s: "1300 = 15x + 400 -> 900 = 15x -> x = 60. Industria manufacturera.", pi: "Shoe factory, leather rolls, worker sewing a shoe, industrial lighting."},
+        {t: "Oferta de Granos Básicos", e: "La oferta de frijol es S(p) = 50p + 200 (p en dólares). Si el precio sube de $2 a $3.50, ¿en cuánto aumenta la cantidad ofrecida?", o: ["75 unidades", "100 unidades", "50 unidades", "125 unidades"], s: "S(2)=300, S(3.5)=375. Diferencia = 75. Economía de mercado.", pi: "Sacks of red beans in a market, price boards, sunlight."},
+        {t: "Dosis de Medicamento", e: "La concentración es C(t) = 10e^(-0.5t). Calcule C(0), la dosis inicial inyectada.", o: ["10 mg", "5 mg", "0 mg", "1 mg"], s: "C(0) = 10 × e⁰ = 10 × 1 = 10 mg. Aplicación en salud pública.", pi: "Doctor preparing a syringe, hospital setting, medical monitors."},
+        {t: "Llenado de Tanque Comunal", e: "V(t) = 40t + 100 (litros). Si el tanque tiene capacidad de 1,700 litros, ¿cuánto tarda en llenarse?", o: ["40 min", "50 min", "30 min", "45 min"], s: "1700 = 40t + 100 -> 1600 = 40t -> t = 40. Gestión hídrica rural.", pi: "Large blue water tank in a village, pipes, community members."},
+        {t: "Temperatura de Horno (Panadería)", e: "T(t) = 180 - 15t. Si el pan debe sacarse a 90°C, ¿cuántos minutos debe pasar?", o: ["6 min", "5 min", "10 min", "8 min"], s: "90 = 180 - 15t -> -90 = -15t -> t = 6. Procesos artesanales.", pi: "Baker taking out bread from a brick oven, golden crust, flour on hands."},
+        {t: "Rendimiento de Combustible", e: "R(v) = -0.01v² + 0.8v. Halle el rendimiento si la velocidad v = 40 km/h.", o: ["16 km/gal", "20 km/gal", "12 km/gal", "18 km/gal"], s: "R(40) = -0.01(1600) + 0.8(40) = -16 + 32 = 16. Eficiencia energética.", pi: "Car dashboard, fuel gauge, highway view."}
+    ],
+    trigonometria: [
+        {t: "Altura de Torre Eléctrica", e: "Un técnico de la CEL mide una sombra de 15m. El ángulo de elevación del sol es de 52°. Calcule la altura real de la torre.", o: ["19.20 m", "15.00 m", "11.72 m", "25.40 m"], s: "h = 15 × tan(52°) ≈ 15 × 1.28 = 19.20m. Infraestructura energética.", pi: "High voltage power line tower, bright sun, technician with a clinometer."},
+        {t: "Rampa en Centro Escolar", e: "Según la ley de inclusión, una rampa de 6m de largo tiene una altura de 0.8m. Calcule el ángulo de inclinación.", o: ["7.66°", "10.20°", "5.45°", "12.00°"], s: "sen(θ) = 0.8 / 6 -> θ = arcsen(0.133) ≈ 7.66°. Diseño arquitectónico inclusivo.", pi: "Concrete ramp at a school entrance, wheelchair symbol, blue and white colors."},
+        {t: "Navegación en Acajutla", e: "Desde un acantilado de 50m, se observa un barco con un ángulo de depresión de 18°. ¿A qué distancia de la costa está el barco?", o: ["153.88 m", "120.50 m", "180.00 m", "145.20 m"], s: "d = 50 / tan(18°) ≈ 50 / 0.3249 = 153.88m. Seguridad marítima.", pi: "Ocean horizon, ship in the distance, rocky cliff foreground."},
+        {t: "Antena en el Volcán", e: "Una antena de 20m se sujeta con un cable de 35m. Halle el ángulo que forma el cable con el suelo.", o: ["34.85°", "45.00°", "55.15°", "25.40°"], s: "sen(θ) = 20 / 35 -> θ = arcsen(0.571) ≈ 34.85°. Telecomunicaciones.", pi: "Communication tower on a mountain peak, steel cables, clouds around."},
+        {t: "Vuelo de Dron (Catastro)", e: "Un dron vuela a 100m de altura. Si el ángulo de visión hacia un hito es de 40°, ¿cuál es la distancia geométrica (hipotenusa) del dron al hito?", o: ["155.57 m", "130.54 m", "120.00 m", "165.20 m"], s: "dist = 100 / cos(50°) o 100 / sen(40°) = 155.57m. Topografía moderna.", pi: "Modern drone in the air, camera pointing down, agricultural field below."},
+        {t: "Ancho del Río Lempa", e: "Desde un punto A se ve un árbol en la otra orilla. Al caminar 30m paralelos al río, el ángulo es de 35°. Halle el ancho del río.", o: ["21.01 m", "30.00 m", "25.50 m", "18.40 m"], s: "ancho = 30 × tan(35°) = 21.01m. Geografía nacional.", pi: "Wide river, tropical vegetation, water flowing, surveyor tools."},
+        {t: "Sombra del Monumento", e: "El Monumento al Salvador del Mundo mide 18m. Si su sombra mide 22m, ¿cuál es el ángulo de elevación del sol?", o: ["39.29°", "45.00°", "50.71°", "35.20°"], s: "tan(θ) = 18 / 22 -> θ = arctan(0.818) ≈ 39.29°. Turismo y patrimonio.", pi: "Statue of Christ on the globe in San Salvador, blue sky, long shadow."},
+        {t: "Escalera de Bomberos", e: "Una escalera de 12m se apoya a 3m de la pared. ¿Qué altura alcanza y qué ángulo forma?", o: ["11.62m; 75.52°", "10.00m; 60.00°", "11.00m; 80.00°", "12.00m; 70.00°"], s: "h = √(12² - 3²) = 11.62m. cos(θ) = 3 / 12 -> θ = 75.52°. Gestión de emergencias.", pi: "Red fire truck, extended ladder against a building, emergency lights."},
+        {t: "Panel Solar (UES)", e: "Un panel de 2m de largo debe inclinarse 15° para máxima eficiencia. ¿A qué altura del suelo queda el borde superior?", o: ["0.52 m", "0.80 m", "0.40 m", "0.65 m"], s: "h = 2 × sen(15°) = 0.517m. Energías renovables.", pi: "Solar panels on a laboratory roof, shiny surface, technical wiring."},
+        {t: "Tiro con Arco (Juegos)", e: "Un arquero dispara a un blanco a 70m. Si la flecha sube con un ángulo de 2°, ¿a qué altura máxima teórica llega?", o: ["2.44 m", "1.50 m", "3.10 m", "2.00 m"], s: "h = 70 × tan(2°) ≈ 2.44m. Biomecánica deportiva.", pi: "Professional archer, bow drawn, target in distance, stadium track."}
+    ],
+    geometria: [
+        {t: "Trazado Tren del Pacífico", e: "La vía conectará Sonsonate (2, 3) con una terminal en (10, 11). Determine la distancia lineal en kilómetros del tramo.", o: ["11.31 km", "10.00 km", "14.14 km", "12.50 km"], s: "d = √((10-2)² + (11-3)²) = √(8² + 8²) = √128 ≈ 11.31 km. Desarrollo ferroviario.", pi: "Modern train tracks cutting through a green landscape, blueprint overlay."},
+        {t: "Perímetro Parque Cuscatlán", e: "Un sector es circular: x² + y² - 4x - 6y - 12 = 0. Halle el radio para calcular la cantidad de malla necesaria.", o: ["5 m", "4 m", "6 m", "3 m"], s: "(x-2)² + (y-3)² = 12 + 4 + 9 = 25. Radio = √25 = 5m. Paisajismo urbano.", pi: "Aerial view of a circular plaza in a park, stone pavement, trees."},
+        {t: "Cobertura de Antena 5G", e: "Una antena en el centro (0, 0) cubre un radio de 8km. ¿Cuál es la ecuación de la circunferencia límite?", o: ["x² + y² = 64", "x² + y² = 8", "x² + y² = 16", "x + y = 64"], s: "Ecuación: x² + y² = r² -> x² + y² = 64. Conectividad digital.", pi: "City map with a blue transparent circle representing signal coverage."},
+        {t: "Carretera Recta", e: "Una calle pasa por (1, 2) y tiene pendiente m = 3. Halle la ecuación general de la recta (Ax + By + C = 0).", o: ["3x - y - 1 = 0", "3x + y - 1 = 0", "x - 3y + 1 = 0", "3x - y + 1 = 0"], s: "y - 2 = 3(x - 1) -> y - 2 = 3x - 3 -> 3x - y - 1 = 0. Planeamiento vial.", pi: "A straight asphalt road, yellow lines, vanishing point, sunset."},
+        {t: "Punto Medio Logístico", e: "Un camión viaja de San Salvador (0, 0) a San Miguel (140, 0). ¿En qué coordenada está el punto medio para una gasolinera?", o: ["(70, 0)", "(80, 0)", "(60, 0)", "(70, 70)"], s: "M = (0+140)/2 = 70. Gestión de flotas.", pi: "Map of El Salvador, line connecting two cities, gas station icon in middle."},
+        {t: "Refuerzo de Techo", e: "Dos vigas forman rectas perpendiculares. Si una tiene m = -1/2, ¿cuál es la pendiente de la otra?", o: ["m = 2", "m = 1/2", "m = -2", "m = 1"], s: "m1 × m2 = -1 -> (-1/2) × m2 = -1 -> m2 = 2. Estructuras metálicas.", pi: "Steel roof trusses, workers welding, industrial hangar."},
+        {t: "Espejo de Agua Circular", e: "Centro en (3, -2) y radio 4. Halle la ecuación canónica.", o: ["(x-3)² + (y+2)² = 16", "(x+3)² + (y-2)² = 16", "(x-3)² + (y+2)² = 4", "x² + y² = 16"], s: "Sustitución en (x-h)² + (y-k)² = r². Arquitectura decorativa.", pi: "Modern garden with a circular pond, reflection of trees, minimalist."},
+        {t: "Cruce de Avenidas", e: "Calle 1: y = 2x. Calle 2: y = -x + 6. Halle el punto de intersección (semáforo).", o: ["(2, 4)", "(3, 3)", "(4, 2)", "(1, 5)"], s: "2x = -x + 6 -> 3x = 6 -> x = 2. y = 2(2) = 4. Urbanismo.", pi: "Street intersection, traffic lights, cars, aerial diagram."},
+        {t: "Área de Lote Triangular", e: "Vértices en (0,0), (6,0) y (0,8). Halle el área en metros cuadrados.", o: ["24 m²", "48 m²", "14 m²", "20 m²"], s: "Área = (base × altura) / 2 = (6 × 8) / 2 = 24. Catastro municipal.", pi: "Triangular corner lot, wooden fence, grass, measuring tape icon."},
+        {t: "Rotonda de Desvío", e: "Ecuación x² + y² = 9. Determine el diámetro de la rotonda.", o: ["6 metros", "3 metros", "9 metros", "18 metros"], s: "r = √9 = 3. Diámetro = 2r = 6. Diseño de tráfico.", pi: "Circular traffic island, flowers in middle, clean asphalt."}
+    ],
+    estadistica: [
+        {t: "Resultados Prueba Avanzo", e: "En una sección de 40 alumnos, las notas de matemática fueron: 20 alumnos (8.0), 10 alumnos (7.0), 10 alumnos (9.0). Calcule la media aritmética.", o: ["7.75", "8.00", "8.25", "7.50"], s: "Media = (20×8 + 10×7 + 10×9) / 40 = (160+70+90)/40 = 320/40 = 8.0. Calidad educativa.", pi: "Students in a computer lab, taking a digital test, concentration faces."},
+        {t: "Remesas y Dispersión", e: "Muestra de remesas: $100, $200, $150, $250. Calcule el rango.", o: ["$150", "$100", "$200", "$50"], s: "Rango = Máx - Mín = 250 - 100 = 150. Análisis de desigualdad.", pi: "Infographic of El Salvador map with different sized dollar icons."},
+        {t: "Moda en Canasta Básica", e: "Precios del frijol en 5 mercados: $0.90, $1.00, $0.90, $1.10, $0.90. Halle la moda.", o: ["$0.90", "$1.00", "$1.10", "$0.95"], s: "El valor con mayor frecuencia es $0.90. Tendencias de consumo.", pi: "Market stall with red beans, prices written on cardboard."},
+        {t: "Censo: Hijos por Familia", e: "Datos: 2, 3, 1, 2, 4, 2, 1, 3. Halle la mediana.", o: ["2", "2.5", "3", "1.5"], s: "Ordenados: 1, 1, 2, 2, 2, 3, 3, 4. Mediana = (2+2)/2 = 2. Perfil sociodemográfico.", pi: "A family with children in a park, statistics chart overlay."},
+        {t: "Desviación Estándar (Peso)", e: "Si la varianza del peso de sacos de azúcar es 9 kg², ¿cuál es la desviación estándar?", o: ["3 kg", "9 kg", "4.5 kg", "81 kg"], s: "σ = √Varianza = √9 = 3kg. Control de calidad industrial.", pi: "Sugar sacks on a conveyor belt, digital scale display."},
+        {t: "Probabilidad de Lluvia", e: "En octubre llueve 20 días de 31. Probabilidad de que NO llueva un día al azar.", o: ["0.35", "0.65", "0.20", "0.50"], s: "P(No) = 11 / 31 ≈ 0.35. Meteorología aplicada.", pi: "Rainy window, droplets, blurred street, umbrella icon."},
+        {t: "Gráfico de Pastel: Exportación", e: "El café representa el 15% de exportaciones. ¿Cuántos grados ocupa en un gráfico circular?", o: ["54°", "15°", "30°", "45°"], s: "Grados = 0.15 × 360 = 54°. Visualización de datos económicos.", pi: "Colorful pie chart on a tablet screen, business setting."},
+        {t: "Muestreo Electoral", e: "Población de 5 millones. Se encuesta a 1,200 personas. Identifique la muestra.", o: ["1,200 personas", "5 millones", "El Salvador", "Los votantes"], s: "La muestra es el subconjunto representativo estudiado. Sociología política.", pi: "A ballot box, people in line to vote, statistical margin of error icon."},
+        {t: "Frecuencia Relativa (Salud)", e: "De 500 pacientes, 40 tienen gripe. Halle la frecuencia relativa.", o: ["0.08", "0.80", "0.04", "0.10"], s: "FR = 40 / 500 = 0.08. Vigilancia epidemiológica.", pi: "Medical clinic, patients waiting, doctor with a tablet showing graphs."},
+        {t: "Media de Inversión Pública", e: "Inversión en 3 años: $10M, $15M, $20M. Calcule la media anual.", o: ["$15M", "$10M", "$17.5M", "$12M"], s: "(10+15+20)/3 = 15M. Gestión gubernamental.", pi: "New bridge construction, architectural render, financial chart overlay."}
+    ]
+};
+
+let ultimoIndice = -1;
+
+function generarProblema() {
+    const area = document.getElementById('areaSelect').value;
+    const lista = db[area];
+    if(!lista) { alert("Base de datos cargando..."); return; }
+
+    let nuevoIndice;
+    do { nuevoIndice = Math.floor(Math.random() * lista.length); } while (nuevoIndice === ultimoIndice && lista.length > 1);
+    
+    ultimoIndice = nuevoIndice;
+    const p = lista[nuevoIndice];
+
+    document.getElementById('vacio').style.display = 'none';
+    document.getElementById('contenido').style.display = 'block';
+    document.getElementById('solucion').style.display = 'none';
+
+    document.getElementById('labelArea').innerText = document.getElementById('areaSelect').options[document.getElementById('areaSelect').selectedIndex].text.toUpperCase();
+    document.getElementById('p_titulo').innerText = p.t;
+    document.getElementById('p_enunciado').innerHTML = p.e;
+    document.getElementById('p_solucion').innerHTML = p.s;
+    document.getElementById('p_prompt_img').innerText = p.pi;
+
+    let html = "";
+    p.o.forEach((o, i) => {
+        html += `<button class="option-item" onclick="verificarRespuesta('${o}')"><strong>${String.fromCharCode(65+i)})</strong> ${o}</button>`;
+    });
+    document.getElementById('p_opciones').innerHTML = html;
+}
+
+function toggleSolucion() {
+    const s = document.getElementById('solucion');
+    s.style.display = s.style.display === 'none' ? 'block' : 'none';
+    if(s.style.display === 'block') s.scrollIntoView({ behavior: 'smooth' });
+}
+
+function verificarRespuesta(opt) {
+    alert("Respuesta seleccionada: " + opt + "\nConsulte la resolución técnica para verificar su lógica.");
+}
+
+function copiarPromptImg() {
+    const t = document.getElementById('p_prompt_img').innerText;
+    navigator.clipboard.writeText(t);
+    alert("¡Instrucción Visual Copiada! Pégala en tu IA favorita (DALL-E, Midjourney, etc).");
+}
+</script>
+
+</body>
+</html>
